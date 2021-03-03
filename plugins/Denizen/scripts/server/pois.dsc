@@ -7,8 +7,18 @@ poi_yaml_load:
         on shutdown:
         - yaml unload id:pois
         # check has changes? save?
+        on script reload:
+        # TODO: does it make sense to sync flag/yaml instead of keep yaml loaded?
+        - yaml create id:pois
+        - ~yaml load:pois.yml id:pois
+        - define pois <yaml[pois].read[]>
+        - define names <[pois].keys>
+        - narrate <[names]>
+        - yaml unload id:pois
+        - flag server poinames:<[names]>
 
-teleport_poi_command:
+
+tpoi_command:
   type: command
   name: tpoi
   description: teleportiert spieler zu eingetragenem POI (kurzform von /poi tp)
@@ -57,10 +67,8 @@ set_poi_command:
     - stop
   # |HILFE
   - if !<list[neu|tp|teleport|loeschen|löschen|liste|list].contains[<context.args.get[1]||null>]>:
-    - narrate "<yellow>------------ <white>Befehl: /poi<yellow> --------"
+    - narrate "<gray>----------------------------"
     - narrate "<white>P<gray>oints <white>o<gray>f <white>I<gray>nterests sind mit Namen markierte Orte."
-    # - narrate "<yellow>/poi hilfe"
-    # - narrate "  <gray>- Zeigt diese Hilfe an"
     - narrate "<yellow>/poi liste"
     - narrate "  <gray>- Listet Namen aller POIs"
     - narrate "<yellow>/poi neu <light_purple>[NAME]"
@@ -69,7 +77,7 @@ set_poi_command:
     - narrate "  <gray>- Teleportiert zu einem Marker"
     - narrate "<yellow>/poi löschen <light_purple>[NAME]"
     - narrate "  <gray>- Löscht einen Marker"
-    # - narrate <yellow>-----------------------------
+    - narrate <gray>-----------------------------
     - stop
   # |LISTE
   - else if <list[liste|list].contains[<context.args.get[1]||null>]>:

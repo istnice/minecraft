@@ -4,7 +4,7 @@ gui_menu:
     title: Klickz /
     size: 27
     slots:
-    - [i_tp] [i_it] [] [] [] [] [] [] []
+    - [i_tp] [i_it] [i_items] [] [] [] [] [] []
     - [] [] [] [] [] [] [] [] []
     - [i_rel] [] [] [] [] [] [] [] [i_close]
 
@@ -44,6 +44,36 @@ gui_menu_tp:
             - define list:->:<[item]>
             - flag <[item]> test:jo
         - determine <[list]>
+
+
+gui_menu_items:
+    type: inventory
+    inventory: CHEST
+    title: Klickz / Items
+    size: 54
+    slots:
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [i_menu] [] [] [] [] [] [] [] [i_close]
+    # TODO: pagination bei mehr als 45 items...
+    procedural items:
+    - define items <list>
+    - foreach <server.scripts> as:s:
+        # - narrate <[s].container_type>
+        - if <[s].container_type> == ITEM:
+            # - narrate "Item"
+            - if <[s].name.starts_with[i_]>:
+                # - narrate "valid item"
+                # - define i <item[<[s].name>]||null>
+                # - if !<[i]> == null:
+                    # - narrate <[i].display>
+                - define i <item[<[s].name>]>
+                - if <[i].has_flag[preis]>:
+                    - define items:->:<[i]>
+    - determine <[items]>
 
 
 gui_menu_it:
@@ -89,16 +119,18 @@ gui_handler:
         on player clicks i_it in gui_menu priority:2:
         - inventory close d:gui_menu
         - inventory open d:gui_menu_it
-        on player clicks i_close in gui_menu priority:2:
+        on player clicks i_items in gui_menu priority:2:
         - inventory close d:gui_menu
+        - inventory open d:gui_menu_items
+        on player clicks i_close in inventory priority:2:
+        - inventory close d:<context.inventory>
+        on player clicks i_menu in inventory priority:2:
+        - inventory close d:<context.inventory>
+        - inventory open d:gui_menu
 
         # tp
         on player clicks i_spawn in gui_menu_tp priority:2:
         - teleport <player> <server.flag[pois.spawn]>
-        # ---
-        on player clicks i_menu in gui_menu_tp priority:2:
-        - inventory close d:gui_menu_tp
-        - inventory open d:gui_menu
         on player clicks i_close in gui_menu_tp priority:2:
         - inventory close d:gui_menu_tp
 
@@ -171,6 +203,11 @@ i_tp:
 i_it:
     type: item
     material: red_wool
+    display name: Admintools
+
+i_items:
+    type: item
+    material: green_wool
     display name: Items
 
 # locations

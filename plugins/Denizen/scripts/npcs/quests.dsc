@@ -128,6 +128,8 @@ quests_cmd:
     - define args1 <list[neu|laden|speichern|starten|info|täglich|vergessen|hilfe]>
     - if !<[args1].contains[<context.args.get[1]||null>]>:
         - determine <[args1]>
+    - else if <context.args.get[1]||null> == vergessen:
+        - determine <server.flag[quests].keys>
     - else if <list[starten|start].contains[<[args1]>]>:
         - determine <server.flag[quests].keys>
 
@@ -227,6 +229,7 @@ start_quest:
     # - define idx 1
     - foreach <[quest].get[stages]> as:stage:
         - define stagetxts <[stagetxts].include[<gray><[stage].get[name]>]>
+    - run update_player_sidebar def:<[player]>
     - sidebar remove <[player]>
     - sidebar set title:<gold><[quest].get[name]> values:<[stagetxts]>
     - define q <map[id/<[qid]>|name/<[quest].get[name]>|stage/1]>

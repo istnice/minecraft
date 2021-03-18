@@ -111,6 +111,3 @@ i_teller:
   display name: Teller
   flags:
     preis: 3
-
-
-

@@ -11,13 +11,15 @@ ramscher_assi:
         - define pool <list[]>
         - define items <list[<item[i_apfel]>|<item[i_taschenuhr]>|<item[i_teller]>|<item[i_stiefel]>]>
         - foreach <[items]> as:i:
-            - narrate "adding item: <[i]>"
+            # - narrate "adding item: <[i]>"
             - define preis <[i].flag[preis].mul_int[2]>
-            - narrate "mit preis: <[preis]>"
+            # - narrate "mit preis: <[preis]>"
             - define offer <map[item/<[i].escaped>|empty/false|stock/5]>
             - define offer <[offer].with[preis].as[<[preis]>]>
             - define pool <[pool].include[<[offer]>]>
         - flag <npc> pool:<[pool]>
+        - flag <npc> buymulti:2
+        - flag <npc> selldiv:3
         - narrate "POOL: <[pool]>"
         on click:
         - if <npc.flag[state]> == packtaus:
@@ -53,6 +55,15 @@ ramscher_world:
         on time 20 in world:
         - announce "Es ist 20 Uhr... Ramscher ist weg."
         - inject ramscher_weg_task
+        on player opens ramscher_inventory:
+        - flag <player> active_trader:<npc[274]>
+        - inject update_player_inventory
+        # - foreach <player.inventory.list_contents> as:i:
+        # - define slots <player.inventory.map_slots>
+        # - foreach <[slots].keys> as:s:
+        #     - define i <[slots].get[<[s]>]>
+        #     - define lore "<gold>Preis: <[i].flag[preis]||0>g"
+        #     - inventory adjust slot:<[s]> lore:<[lore]>
         on player clicks close_item in ramscher_inventory priority:5:
         - inventory close d:<context.inventory>
         - determine cancelled
@@ -80,6 +91,8 @@ ramscher_world:
                 - flag <player> geld:0
             - if <player.flag[geld]> >= <[preis]>:
                 - flag <player> geld:<player.flag[geld].sub_int[<[preis]>]>
+                # TODO: update item lore for player (to stack with existing "Verkaufen:")
+                # - define playerlore <[]>
                 - give <[item]> quantity:1
                 # remove 1 quantity
                 - define empty false
@@ -235,6 +248,8 @@ ramscher_weg_task:
 
 ramscher_cmd:
     type: command
+    description: asdf asdf
+    usage: /ramscher
     name: ramscher
     script:
     - if <context.args.get[1]> == packt:
@@ -261,7 +276,7 @@ ramscher_inventory:
             - if <[offer].get[empty]||false>:
                 - define item <item[empty_item]>
             - else:
-                - define lore "<gold>Preis: <[offer].get[preis]>g"
+                - define lore "<gold>Kaufen: <[offer].get[preis]>g"
                 - define item <[offer].get[item].unescaped>
                 # - narrate "Item: <[item]>"
                 # - narrate "Anzahl: <[item].quantity>"

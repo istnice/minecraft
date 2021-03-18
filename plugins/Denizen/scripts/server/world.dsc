@@ -28,3 +28,6 @@ general_events:
 
         # on time changes in world:
         # - announce "<gray>Es ist <context.time> Uhr!"
+        on player right clicks trapped_chest:
+            - narrate "<dark_gray>Verschlossen"
+            - determine cancelled

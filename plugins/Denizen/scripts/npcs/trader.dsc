@@ -28,6 +28,7 @@ trader_assi:
 
 trader_inventory:
     type: inventory
+    debug: false
     inventory: CHEST
     title: Handel mit <player.flag[active_trader_name]>
     size: 27
@@ -58,7 +59,7 @@ trader_cmd:
     name: npctrader
     usage: /npctrader [create/add/clear/set/buy/ruf]
     description: assigns trader and sets items
-    debug: true
+    debug: false
     script:
     # check commands
     - if !<list[create|add|clear|set|buy|rem|info|restock|ruf].contains[<context.args.get[1]||null>]>:
@@ -242,14 +243,32 @@ trader_handler:
         - determine cancelled
 
         on player closes inventory:
-        - inject clean_inventory_items
+        - flag <player> active_trader:!
+        - inject update_player_inventory
 
 
-clean_inventory_items:
+update_player_inventory:
     type: task
     debug: false
     script:
-    - narrate "<blue>TODO: <player.name>s Inventar aufräumen"
+    # TODO: ggf. später verzauberungen/besserungen anpassen
+    # - narrate "<blue>TODO: <player.name>s Inventar aufräumen"
+    - define slots <player.inventory.map_slots>
+    - foreach <[slots].keys> as:s:
+        - define i <[slots].get[<[s]>]>
+        # TODO: generate new item from script?
+        # - define oi <item[<[i].script.name>]>
+        # generate item lore
+        - define lore <list>
+        - if <player.has_flag[active_trader]>:
+            - define base_preis <[i].flag[preis]||0>
+            - define preis <[base_preis].div[<player.flag[active_trader].flag[selldiv]||1>]>
+            - define preis_text "<gold>Verkaufen: <[preis].round_up>g"
+            - define lore <[lore].include[<[preis_text]>]>
+        - if <[i].has_flag[gewicht]>:
+            - define gewicht_text "<dark_gray>Gewicht: <[i].flag[gewicht]>"
+            - define lore <[lore].include[<[gewicht_text]>]>
+        - inventory adjust slot:<[s]> lore:<[lore]>
 
 
 update_trader_task:
@@ -263,10 +282,11 @@ update_trader_task:
             - inventory set o:<item[empty_item]> destination:<context.clicked_inventory> slot:<[slot]>
         - else:
             - define item <[o].get[item].unescaped>
-            - define lore "<gold>Preis: <[offer].get[preis]>g"
+            - define lore "<gold>Kaufen: <[offer].get[preis]>g"
             - adjust def:item lore:<[lore]>
             - inventory set o:<[item]> destination:<context.clicked_inventory> slot:<[slot]>
         - define slot <[slot].add_int[1]>
+    # - inject update_player_inventory
 
 
 restock_trader:

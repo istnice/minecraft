@@ -6,7 +6,7 @@ open_door_check:
         on player right clicks *_trapdoor|*_door|lever|*_gate|dispenser|*dropper|*hopper|*chest|*button|*furnace:
         # on player right clicks *_door|*_trapdoor:
         - define door <context.location>
-        - if <context.location.material.half> == TOP:
+        - if <context.location.material.half||null> == TOP:
             - define door <context.location.add[0,-1,0]>
         # - narrate "FLAGS: <[door].list_flags>"
         - if <[door].has_flag[locked]>:

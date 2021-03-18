@@ -1,0 +1,24 @@
+start: 
+  text: Hallo Rekrut, wilkommen im Rathaus. Ich kenne mich hier in der Burg gut aus. Nach was für Infos suchst du?
+  antworten:
+    antwort1: 
+      text: "☞ &3Schießstand"
+      weiter: schießstand
+    antwort2:
+      text: "☞ &3Kerker"
+      weiter: kerker
+    antwort3:
+      text: "☞ &3Rathaus"
+      weiter: rathaus
+        
+
+schießstand:
+  text: "Wenn du raus gehst auf der anderen Seite der Burg befindet sich ein Schießstand. Wenn du einen Bogen oder eine Armbrust hast, kannst du dort trainieren. Gute Schützen werden mit Monition belohnt."
+
+
+kerker:
+  text: "Wenn du raus gehst auf der rechten Seite befindet sich das Gefängnis. Darunter befinden sich die Räume für... nunja.. die Gefangenen, die von sich aus weniger redselig sind. Der Henker außerhalb der Burg vollstreckt nur Urteile von hochrangigen Soldaten."
+
+
+rathaus:
+  text: "Hier im Rathaus, kannst du mit politischen Entscheidungsträgern sprechen, sofern sie dich empfangen. Du hast als Soldat ausserdem die Möglichkeit regelmäßig neue Aufträge anzunehmen."

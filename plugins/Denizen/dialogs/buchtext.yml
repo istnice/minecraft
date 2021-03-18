@@ -1,0 +1,45 @@
+start: 
+  text: Hallo Ich bin ein Beispiel NPC um die Dialoge zu demonstrieren.
+  antworten:
+    antwort1: 
+      text: "☛ &2Ich bin eine Standardantwort"
+      weiter: standard
+      task: taskname
+      erfordert:
+        ruf:
+          soldaten: 0
+    antwort2:
+      text: "☞ &3Hier die alternative..."
+      color: red
+      weiter: alternativ
+    antwort3:
+      text: "☞ &7Direkt die Highlights"
+      color: red
+      weiter: highlights
+        
+
+standard:
+  text: "Hm, du bist also der Typ für Standardantworten? Das finde Ich irgendwie langweilig.. naja du kannst es dir immernoch überlegen..."
+  antworten:
+    antwort1:
+      text: "☞ &3Ich bin ein neuer Versuch einer alternativen Antwort"
+      weiter: alternativ
+      task: taskname
+      erfordert:
+        ruf:
+          soldaten: 0
+
+
+alternativ:
+  text: Uh, wie erfrischend. Und so mutig von dir! Eine alternative Antwort! Ich bin sehr erfreut.
+
+
+highlights:
+  text: "Man kann sich durch lange verschachtelte Dialoge klicken. Ich kann &3F&4A&5R&6B&7E&8N und ⓔⓜ◯♪Ⓢ:  ★  ⚜ ★✓✔. Ich kann auch Antworten nur bei min. Ruf anzeigen.."
+  antworten:
+    antwort: 
+      text: "☞ &3Was kommt noch"
+      weiter: waskommt
+
+waskommt:
+  text: Geplant ist Text auf mehrere Seiten zu strecken. Das Ausführen von befehlen (fuer items quests usw..). Sowie ein Ingame-Editor zum Dialog erstellen.

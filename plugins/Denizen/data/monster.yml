@@ -1,0 +1,43 @@
+monster:
+  wolf:
+    vanilla: 
+      type: wolf
+    sentinel:
+      respawntime: 30
+    sentinel_scaling: # v1 + v2*lvl + v3*lvl^2 ...
+      health: [12, 2]
+      damage: [0, 0.5]
+      healrate: [0, 0.1]
+      attackrate: [1, 0]
+    wander:
+      radius: 10
+    task: false
+    loot:
+      # fix: # droppt immer
+      #   - item: i_wolffleisch
+      #     quantity: 1
+      scaling: # wird jeweils mob level mal ausgewertet
+        - item: i_wolfspelz
+          chance: 10
+        - item: i_wolffleisch
+          chance: 10
+      epic: # <2%
+        - item: i_zahn
+
+
+
+
+  spinne:
+    vanilla:
+      type: spider
+    wander:
+      radius: 5
+
+  ertrunkener:
+    vanilla:
+      type: drowned
+    wander:
+      radius: 3
+    loot:
+      epic:
+        - item: i_dreizack

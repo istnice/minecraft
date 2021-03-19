@@ -8,6 +8,10 @@ animagus_assi:
     - trigger name:death state:true
     - trigger name:proximity state:true radius:3
     - vulnerable state:true
+    on spawn:
+    - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+    on despawn:
+    - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
     # sentinel setup
     on damage:
     - narrate "tier hp: <npc.health>"

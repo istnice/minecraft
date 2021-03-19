@@ -6,6 +6,10 @@ quest_assi:
         - trigger name:click state:true
         - trigger name:proximity state:true radius:10
         - sneak <npc> start fake
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on enter proximity:
         - if <player.flag[quests.fertig].contains[<npc.flag[quests.quests].get[1]>]>:
             - determine cancelled
@@ -68,10 +72,6 @@ npcquest_cmd:
         - narrate "  <gray>- Erstellt NPC der Quest startet"
         - narrate "<yellow>/npcquest ruf <white>[GILDE] [MENGE]"
         - narrate "  <gray>- Erforderlichen Ruf zum Ansprechen des NPCs anpassen"
-        - narrate "<yellow>/npcquest text &quo<white>[TEXT]<yellow>&quo"
-        - narrate "  <gray>- Text des Dialogbuchs ändern."
-        - narrate "<yellow>/npcquest antwort &quo<white>[TEXT]<yellow>&quo"
-        - narrate "  <gray>- Antworttext des Dialogbuchs ändern."
         - narrate "<yellow>/npcquest link <white>[NPCID]<yellow>"
         - narrate "  <gray>- Dem NPC diese Quest hinzufügen"
         - narrate <gray>-----------------------------
@@ -125,6 +125,7 @@ quests_cmd:
     debug: false
     description: quest verwaltung
     tab complete:
+    # TODO: in scripts reload auch yaml files neu laden? und speichern ggf automatisch aus den commands?
     - define args1 <list[neu|laden|speichern|starten|info|täglich|vergessen|hilfe]>
     - if !<[args1].contains[<context.args.get[1]||null>]>:
         - determine <[args1]>
@@ -230,7 +231,7 @@ start_quest:
     - foreach <[quest].get[stages]> as:stage:
         - define stagetxts <[stagetxts].include[<gray><[stage].get[name]>]>
     - run update_player_sidebar def:<[player]>
-    - sidebar remove <[player]>
+    - sidebar remove players:<list[<[player]>]>
     - sidebar set title:<gold><[quest].get[name]> values:<[stagetxts]>
     - define q <map[id/<[qid]>|name/<[quest].get[name]>|stage/1]>
     - flag <[player]> quests.aktiv.<[qid]>:<[q]>
@@ -259,9 +260,15 @@ update_stage:
         - playsound <[player]> sound:ENTITY_EXPERIENCE_ORB_PICKUP
         - sidebar remove
         - title "title:<gold>Quest Abgeschlossen<&co>" "subtitle:<yellow><[q].get[name]>"
-        - flag <[player]> quests.fertig.<[qid]>:<[player].flag[quests.aktiv.<[qid]>]>
+        - if !<[q].get[redo]||null>==null:
+            - define qcd <[q].get[redo].as_duration>
+            - define qcd_text "<[qcd].formatted.replace[s].with[ Sekunden].replace[m].with[ Minuten].replace[d].with[ Tagen].replace[h].with[ Stunden]>"
+            - narrate "<gray>Quest kann in <[qcd_text]> wiederholt werden."
+            - flag <[player]> quests.fertig.<[qid]>:<[player].flag[quests.aktiv.<[qid]>]> duration:<[qcd]>
+        - else:
+            - flag <[player]> quests.fertig.<[qid]>:<[player].flag[quests.aktiv.<[qid]>]>
         - flag <[player]> quests.aktiv.<[qid]>:!
-        - if <[q].has_flag[rewards]>:
+        - if <[q].get[rewards]||null> != null:
             - narrate "<dark_green>Belohnung:"
         - foreach <[q].get[rewards]> as:rew:
             - if <[rew].get[type]||null> == ruf:

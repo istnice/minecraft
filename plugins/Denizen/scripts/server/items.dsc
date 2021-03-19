@@ -111,3 +111,51 @@ i_teller:
   display name: Teller
   flags:
     preis: 3
+
+
+i_wurfnetz:
+  type: item
+  material: cobweb
+  display name: Wurfnetz
+  flags:
+    preis: 3
+
+
+i_wolfspelz:
+  type: item
+  material: leather
+  display name: Wolfspelz
+  flags:
+    preis: 5
+
+
+i_wolffleisch:
+  type: item
+  material: mutton
+  display name: Wolffleisch
+  flags:
+    preis: 3
+
+
+i_knochen:
+  type: item
+  material: bone
+  display name: Knochen
+  flags:
+    preis: 3
+
+
+i_zahn:
+  type: item
+  material: iron_nugget
+  display name: Zahn
+  flags:
+    preis: 2
+
+
+i_dreizack:
+  type: item
+  material: trident
+  display name: Dreizack
+  flags:
+    preis: 30

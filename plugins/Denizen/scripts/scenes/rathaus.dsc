@@ -5,6 +5,10 @@ rezeptionist_assi:
         on assignment:
         - trigger name:click state:true
         - sneak <npc> start fake
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
 
 
 glocke_task:

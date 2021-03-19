@@ -1,6 +1,6 @@
 bettler_assi:
     type: assignment
-    debug: true
+    debug: false
     actions:
         on assignment:
         - trigger name:click state:true
@@ -12,7 +12,10 @@ bettler_assi:
             - narrate "<red>Kein Skin namens bettler gefunden:"
         - else:
             - adjust <npc> skin_blob:<server.flag[npc_skins.bettler]>
-
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on enter proximity:
         # - cooldown 300
         - playsound <player> sound:ENTITY_VILLAGER_YES

@@ -6,6 +6,10 @@ henker_assi:
         - trigger name:click state:true
         - sneak <npc> start fake
         - narrate "Ok wen kann ich hängen?"
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
         - cooldown 100
         - if <player.flag[ruf.soldaten]||0> < 100:
@@ -93,3 +97,7 @@ verurteilter_assi:
         on assignment:
         - trigger name:click state:true
         - sneak <npc> start fake
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake

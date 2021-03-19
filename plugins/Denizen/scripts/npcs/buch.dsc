@@ -1,6 +1,6 @@
 buch_assi:
     type: assignment
-    debug: true
+    debug: false
     actions:
         on assignment:
         - trigger name:click state:true
@@ -11,6 +11,10 @@ buch_assi:
         - yaml create id:dialog_<npc.flag[dialogid]>
         - ~yaml savefile:dialogs/test.yml id:dialog_<npc.flag[dialogid]>
         # - flag <npc> buch.default "default"
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on enter proximity:
         - flag <npc> dampf:true duration:30
         - while <player.is_online> && <npc.has_flag[dampf]>:
@@ -42,7 +46,7 @@ buch_cmd:
     name: npcbuch
     usage: /npcbuch [neu/ruf/seite/editor]
     description: assigns trader and sets items
-    debug: true
+    debug: false
     script:
     # check commands
     - if !<list[neu|info|ruf|seite|editor|speichern].contains[<context.args.get[1]||null>]>:

@@ -21,6 +21,10 @@ ramscher_assi:
         - flag <npc> buymulti:2
         - flag <npc> selldiv:3
         - narrate "POOL: <[pool]>"
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
         - if <npc.flag[state]> == packtaus:
             - chat "Lass mich erst aufbauen, dann können wir Handeln..."
@@ -127,7 +131,7 @@ ramscher_world:
 
 ramscher_packt_task:
     type: task
-    debug: true
+    debug: false
     script:
         - if <server.has_flag[ramschsitz]>:
             - remove <server.flag[ramschsitz]>

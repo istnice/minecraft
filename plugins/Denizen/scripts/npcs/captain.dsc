@@ -4,6 +4,10 @@ captain_assi:
     actions:
         on assignment:
         - trigger name:click state:true
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
         - cooldown 10
 

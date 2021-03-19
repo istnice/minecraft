@@ -23,6 +23,10 @@ npc_guard_assignment:
 	# - trigger name:damage state:true
 	# - trait state:true health
 	# - trait state:true lookclose
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
         - narrate <npc.flag[type].random.parsed>
 

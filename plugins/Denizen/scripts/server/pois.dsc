@@ -1,5 +1,6 @@
 poi_yaml_load:
     type: world
+    debug: false
     events:
         on server start:
         - yaml create id:pois
@@ -20,6 +21,7 @@ poi_yaml_load:
 
 tpoi_command:
   type: command
+  debug: false
   name: tpoi
   description: teleportiert spieler zu eingetragenem POI (kurzform von /poi tp)
   usage: /tpoi [POINAME]

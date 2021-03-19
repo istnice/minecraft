@@ -7,6 +7,10 @@ fightdog_assi:
         - trigger name:death state:true
         - sneak <npc> start fake
         - trait state:true sentinel
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
         - if !<player.has_flag[geld]>:
             - flag <player> geld:0
@@ -30,6 +34,10 @@ dogfight_assi:
     actions:
         on assignment:
         - trigger name:click state:true
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
         - cooldown 2
         - define state <npc.flag[state]||null>

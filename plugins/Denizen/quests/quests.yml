@@ -5,6 +5,7 @@ quests:
     wait: "Ich warte auf mein Bier..."
     done: "Prost! Du bist von der guten Sorte!."
     answ: "ok"
+    # redo: 1d
     rewards:
     - type: ruf
       wert: 20
@@ -54,6 +55,7 @@ quests:
     wait: "Finde meine Katze... Bitte.."
     done: "Danke!"
     answ: "Ja ich werde sie einfangen!"
+    redo: 1m
     rewards:
     - type: geld
       wert: 1

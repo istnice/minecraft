@@ -34,7 +34,7 @@ lock_door_cmd:
     name: schloss
     description: verschliesst Block
     usage: /schloss
-    debug: true
+    debug: false
     tab complete:
     - define args1 <list[auf|zu|ruf|flag|item|info]>
     - if !<[args1].contains[<context.args.get[1]||null>]>:

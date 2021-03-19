@@ -1,5 +1,6 @@
 grenze_cmd:
     type: command
+    debug: false
     name: grenze
     usage: /grenze
     script:
@@ -20,6 +21,7 @@ grenze_cmd:
 
 grenze_world:
     type: world
+    debug: false
     events:
         on player enters cuboid:
         - narrate <context.area.note_name>
@@ -57,6 +59,7 @@ grenze_world:
         # - adjust <player> potion_effects:<list[CONFUSION,250,200,false,true,false|SLOW,255,200,false,true,false|POISON,250,200,false,false,false]>
         # - adjust <player> oxygen:2
         on player exits cuboid:
+        - announce "<dark_gray><player.name> left <context.area.note_name>"
         - if !<server.flag[grenzen].keys.contains[<context.area.note_name>]>:
             - narrate "Keine Grenze"
             - stop

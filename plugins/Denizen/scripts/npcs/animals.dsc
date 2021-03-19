@@ -7,6 +7,10 @@ tier_assi:
         - trigger name:click state:true
         - trigger name:death state:true
         - vulnerable state:true
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         # sentinel setup
         on damage:
         - narrate "tier hp: <npc.health>"

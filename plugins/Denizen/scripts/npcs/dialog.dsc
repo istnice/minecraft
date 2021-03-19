@@ -5,6 +5,10 @@ dialog_assi:
         on assignment:
         - trigger name:click state:true
         - trigger name:chat state:true
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
     interact scripts:
       - 1 dialog_interaction
 

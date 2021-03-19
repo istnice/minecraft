@@ -7,6 +7,10 @@ bruecken_assi:
         - sneak <npc> start fake
         - trigger name:proximity state:true radius:10
         - sneak <npc> start fake
+        on spawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> start fake
+        on despawn:
+        - sneak <list[<npc>].include[<npc.name_hologram_npc||<list>>].include[<npc.hologram_npcs||<list>>]> stopfake
         on click:
             - stop
         on enter proximity:

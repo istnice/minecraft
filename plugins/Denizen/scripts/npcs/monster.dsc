@@ -49,6 +49,7 @@ monster_assi:
 
 monster_cmd:
     type: command
+    debug: false
     name: npcmonster
     usage: /npcmonster
     description: "Spawnt und managed monster. Monster haben das Sentinel Combat-System und sind aggressiv gegen Spieler."
@@ -93,7 +94,8 @@ monster_cmd:
         - if !<server.flag[monster].keys.contains[<context.args.get[2]>]>:
             - narrate "<red>Ungültiger Monstertyp: <yellow>/npcmonster neu <red>TYPE"
             - stop
-        - define type:<context.args.get[2]>
+        - define type <server.flag[monster].get[<context.args.get[2]>].get[vanilla].get[type]>
+        # - narrate <[type]>
         - define level:<context.args.get[3]||1>
         - create <[type]> "<[type]> (<[level]>)" <player.location> save:npc traits:sentinel
         - define npc <entry[npc].created_npc>
@@ -117,7 +119,7 @@ monster_cmd:
 
 update_monster_task:
     type: task
-    debug: true
+    debug: false
     definitions: npc
     script:
     # fallback flags
@@ -179,13 +181,13 @@ monster_reset_task:
     type: task
     debug: false
     script:
-    # - narrate "Alle Monster Zurücksetzen"
-    - inject monster_laden_task
     - foreach <server.npcs_assigned[monster_assi]> as:npc:
         - execute as_server "sentinel respawn --id <[npc].id>" silent
         - execute as_server "sentinel forgive --id <[npc].id>" silent
         - run update_monster_task def:<[npc]>
 
+
+# TODO: copy egg (spawnt copy von selected npc mit selben flags usw.. )
 
 monster_world:
     type: world
@@ -194,4 +196,21 @@ monster_world:
         on reload scripts:
         - run monster_laden_task
         on server start:
+        - inject monster_laden_task
         - run monster_reset_task
+        on player right clicks block with:monsterspawn_item:
+        - inject permission_op
+        - define type <context.item.flag[monstertype]>
+        - define level <context.item.quantity||1>
+        - define cmd "npcmonster neu <[type]> <[level]>"
+        - narrate "<dark_gray>Spawnei führt Befehl aus: <gray>/<[cmd]>"
+        - execute as_player <[cmd]>
+        # - define data <server.flag[monster].get[<[type]>]||null>
+
+
+monsterspawn_item:
+  type: item
+  material: wolf_spawn_egg
+  display name: Monster - (unknown)
+  flags:
+    monstertype: unknown

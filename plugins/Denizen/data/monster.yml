@@ -25,13 +25,12 @@ monster:
         - item: i_zahn
 
 
-
-
   spinne:
     vanilla:
       type: spider
     wander:
       radius: 5
+
 
   ertrunkener:
     vanilla:
@@ -41,3 +40,26 @@ monster:
     loot:
       epic:
         - item: i_dreizack
+
+
+  skelett:
+    vanilla:
+      type: skeleton
+    wander:
+      radius: 4
+    loot:
+      scaling:
+        - item: i_knochen
+          chance: 20
+
+  skelett_schwarz:
+    vanilla:
+      type: wither_skeleton
+    wander:
+      radius: 4
+    loot:
+      scaling:
+        - item: i_knochen
+          chance: 20
+      epic:
+        - item: i_totenkopf

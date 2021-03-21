@@ -119,6 +119,16 @@ i_wurfnetz:
   display name: Wurfnetz
   flags:
     preis: 3
+    text: Zum Einfangen von ungefährlichen Tieren.
+
+
+i_wurfnetz_verbessert:
+  type: item
+  material: cobweb
+  display name: Verbessertes Wurfnetz
+  flags:
+    preis: 30
+    text: Zum Einfangen von Gegnern oder Tieren.
 
 
 i_wolfspelz:
@@ -159,3 +169,11 @@ i_dreizack:
   display name: Dreizack
   flags:
     preis: 30
+
+
+i_totenkopf:
+  type: item
+  material: wither_skeleton_head
+  display name: Schwarzer Totenschädel
+  flags:
+    preis: 50

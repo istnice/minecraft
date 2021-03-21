@@ -117,6 +117,7 @@ chess_command:
 
 chess_piece_assignment:
     type: assignment
+    debug: false
     actions:
         on assignment:
         - trigger name:click state:true

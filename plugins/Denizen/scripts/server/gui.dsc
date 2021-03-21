@@ -4,7 +4,7 @@ gui_menu:
     title: Klickz /
     size: 27
     slots:
-    - [i_tp] [i_it] [i_items] [] [] [] [] [] []
+    - [i_tp] [i_it] [i_items] [i_monster] [] [] [] [] []
     - [] [] [] [] [] [] [] [] []
     - [i_rel] [] [] [] [] [] [] [] [i_close]
 
@@ -28,13 +28,7 @@ gui_menu_tp:
         - define list <list>
         - foreach <server.online_players>:
             - define item player_head[skull_skin=<[value].name>;display_name=<[value].name>].with[flag=pkey:value]
-            # - drop <[item]> <server.match_player[sarb0t].location>
-            # - narrate <[item]>
-            # - mechanism <item>
-            # - flag <[item]> playertp:true
-            # - narrate <[item].displa>
             - define list:->:<[item]>
-
         - define mapFlag <server.flag[POIS]>
         - foreach <[mapFlag].keys> as:poikey:
             # - narrate <[poikey]>
@@ -74,6 +68,32 @@ gui_menu_items:
                 - if <[i].has_flag[preis]>:
                     - define items:->:<[i]>
     - determine <[items]>
+
+
+gui_menu_monster:
+    type: inventory
+    inventory: CHEST
+    title: Menu / Monster
+    size: 54
+    slots:
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [] [] [] [] [] [] [] [] []
+    - [i_menu] [] [] [] [] [] [] [] [i_close]
+    # TODO: pagination bei mehr als 45 items...
+    procedural items:
+    - define items <list>
+    - foreach <server.flag[monster].keys> as:type:
+        - define item <item[monsterspawn_item]>
+        - define display "Monster - <[type]>
+        - adjust def:item display:<[display]>
+        - adjust def:item flag:monstertype:<[type]>
+        # - adjust def:item 
+        - define items:->:<[item]>
+    - determine <[items]>
+
 
 
 gui_menu_it:
@@ -116,12 +136,16 @@ gui_handler:
         on player clicks i_tp in gui_menu priority:2:
         - inventory close d:gui_menu
         - inventory open d:gui_menu_tp
+        # TODO: unify und open unified inv based on flags
         on player clicks i_it in gui_menu priority:2:
         - inventory close d:gui_menu
         - inventory open d:gui_menu_it
         on player clicks i_items in gui_menu priority:2:
         - inventory close d:gui_menu
         - inventory open d:gui_menu_items
+        on player clicks i_monster in gui_menu priority:2:
+        - inventory close d:gui_menu
+        - inventory open d:gui_menu_monster
         on player clicks i_close in inventory priority:2:
         - inventory close d:<context.inventory>
         on player clicks i_menu in inventory priority:2:
@@ -188,7 +212,7 @@ i_menu:
     material: bookshelf
     display name: Hauptmenü
 
-
+# TODO: 1 item template wiederverwenden? inventory links / paths in flags?
 i_rel:
     type: item
     material: clock
@@ -209,6 +233,11 @@ i_items:
     type: item
     material: green_wool
     display name: Items
+
+i_monster:
+    type: item
+    material: wolf_spawn_egg
+    display name: Spawn Monster
 
 # locations
 i_spawn:

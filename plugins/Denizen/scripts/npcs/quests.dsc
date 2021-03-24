@@ -193,7 +193,7 @@ quests_cmd:
     - if <context.args.get[1]> == laden:
         # TODO: check single quest id in arg 3
         - yaml create id:quests
-        - yaml load:quests/quests.yml id:quests
+        - yaml load:data/quests.yml id:quests
         - define quests <yaml[quests].read[quests]>
         - narrate <[quests].keys>
         - flag server quests:<[quests]>
@@ -203,7 +203,7 @@ quests_cmd:
         # TODO: check single quest id in arg 3
         - yaml create id:quests
         - yaml id:quests set quests:<server.flag[quests]>
-        - yaml id:quests savefile:quests/quests.yml
+        - yaml id:quests savefile:data/quests.yml
         - narrate "<gray>Quests gespeichert"
     # RESET
     - if <context.args.get[1]> == vergessen:
@@ -290,7 +290,7 @@ check_loot:
     definitions: player
     script:
     # TODO: load yaml file earlier
-    - yaml load:quests/quests.yml id:quests
+    - yaml load:data/quests.yml id:quests
     - define quests <yaml[quests].read[quests]>
     # - announce "Check loot: <[player]>"
     - foreach <[player].flag[quests.aktiv]> as:q:
@@ -313,7 +313,7 @@ check_goto:
     definitions: player|area
     script:
     # TODO: load yaml file earlier
-    - yaml load:quests/quests.yml id:quests
+    - yaml load:data/quests.yml id:quests
     - define quests <yaml[quests].read[quests]>
     - foreach <[player].flag[quests.aktiv]> as:q:
         - define s <[q].get[stage]>

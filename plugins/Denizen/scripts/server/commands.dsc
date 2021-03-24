@@ -293,6 +293,7 @@ gamemode_cmd:
     - else:
       - narrate "<gray>Du bist im <player.gamemode> mode, der Befehl dient zum schnellen Wechsel zwischen Adventure/Creative"
 
+
 update_cmd:
   type: command
   name: update
@@ -305,15 +306,6 @@ update_cmd:
   #   - note <[region]> as:<[region].id>
   #   - narrate "<green>notiert: <[region].id>"
   - sidebar set "title:Sidebar.. " "values:Eine Reihe|mit eigenen|Daten..|ping<&co> <player.ping>" "scores:|||"
-
-
-enter_regions:
-  type: world
-  events:
-    on player enters finsterwald:
-    # only works for cuboids :/
-      - narrate "Licht aus es ist Finsterwald"
-      - title "title:Der Finsterwald"
 
 
 fussweg:

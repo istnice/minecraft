@@ -141,10 +141,10 @@ ramscher_packt_task:
         # TODO: loop over list?
         # Spawn packed
         - define filepath ramscher/gepackt
-        - ~worldedit paste file:<[filepath]> position:<[loc]>
+        - worldedit paste file:<[filepath]> position:<[loc]>
 
         # handle npcs
-        - wait 1s
+        - wait 2s
         - define schwein1 <[ramscher].flag[schwein1]>
         - define schwein2 <[ramscher].flag[schwein2]>
         # - define sitz <[ramscher].flag[sitz]>

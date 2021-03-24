@@ -24,9 +24,9 @@ grenze_world:
     debug: false
     events:
         on player enters cuboid:
-        - narrate <context.area.note_name>
+        # - narrate <context.area.note_name>
         - if !<server.flag[grenzen].keys.contains[<context.area.note_name>]>:
-            - narrate "Keine Grenze"
+            # - narrate "Keine Grenze"
             - stop
         # - if !<player.has_flag[grenzer]>:
         - flag <player> grenzer duration:2m
@@ -59,9 +59,9 @@ grenze_world:
         # - adjust <player> potion_effects:<list[CONFUSION,250,200,false,true,false|SLOW,255,200,false,true,false|POISON,250,200,false,false,false]>
         # - adjust <player> oxygen:2
         on player exits cuboid:
-        - announce "<dark_gray><player.name> left <context.area.note_name>"
+        # - announce "<dark_gray><player.name> left <context.area.note_name>"
         - if !<server.flag[grenzen].keys.contains[<context.area.note_name>]>:
-            - narrate "Keine Grenze"
+            # - narrate "Keine Grenze"
             - stop
         - adjust <player> remove_effects
         - flag <player> grenzer:!

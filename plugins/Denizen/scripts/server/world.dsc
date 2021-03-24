@@ -3,7 +3,7 @@ general_events:
     debug: false
     events:
         #| SPIELER STIRBT
-        on player death:
+        on player death in:world:
         # TODO: drop playerhead depending on cause?
         - narrate "Du bist tot"
         # Head drop at 10% chance
@@ -31,6 +31,9 @@ general_events:
         on player right clicks trapped_chest:
             - narrate "<dark_gray>Verschlossen"
             - determine cancelled
+        
+        on structure grows naturally:
+        - announce "<gray>Pflanze wächst: <context.structure>"
 
 
 

@@ -1,30 +1,41 @@
-dungeon_cmd:
+dim_cmd:
     type: command
+    debug: false
     name: dimension
     usage: /dimension
     aliases:
         - dim
     description: manage dimensions
     tab complete:
-    - define args1 <list[create|help|list|info|join|setup|reset|select]>
+    - define args1 <list[create|help|list|info|join|setup|reset|select|remove|rem]>
     - if !<[args1].contains[<context.args.get[1]||null>]>:
         - determine <[args1]>
     # - if <list[create].contains[<context.args.get[1]>]>:
     - define create_raw_args "create "
     - define setup_raw "setup "
     - define sel_raw "select "
+    - define space " "
     - if <context.raw_args.starts_with[<[create_raw_args]>]>:
+        - define templates <list[superflat]>
+        - if <context.args.get[2]||null> != null && <context.raw_args.ends_with[<[space]>]>:
+            - determine <[templates]>
+        - else if <context.args.get[3]||null> != null:
+            - determine <[templates]>
         - if <context.args.get[2]||null> == null:
-            - determine <list[NAME]>
+            - determine <list[ID]>
         - else:
             - determine <list[COPYOF]>
     - else if <context.raw_args.starts_with[<[sel_raw]>]>:
         - determine <server.flag[dims].keys>
     - else if <context.raw_args.starts_with[<[setup_raw]>]>:
         - determine <list[name|tpin|tpout|start|finish|multiplayer]>
+    - else if <context.args.get[1]> == join:
+        - determine <server.flag[dims].keys>
+    - else if <list[remove|rem|delete|del].contains[<context.args.get[1]>]>:
+        - determine <server.flag[dims].keys>
     script:
     - inject permission_op
-    - if !<list[create|help|list|info|join|setup|reset|select].contains[<context.args.get[1]||null>]>:
+    - if !<list[create|help|list|info|join|setup|reset|select|rem|delete|del|remove].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------
         - narrate "<yellow>/dim list"
         - narrate "  <gray>- Listet alle künstlichen Dimensionen."
@@ -32,7 +43,7 @@ dungeon_cmd:
         - narrate "  <gray>- Wählt ein Dungeon zum Bearbeiten aus."
         - narrate "<yellow>/dim info"
         - narrate "  <gray>- Zeigt Info zur ausgewählten Dimension und dessen Instanzen."
-        - narrate "<yellow>/dim create <light_purple>ID"
+        - narrate "<yellow>/dim create <light_purple>ID <light_purple>(TEMPLATE)"
         - narrate "  <gray>- Erstellt neue künstliche Dimension. ID = Einzigartiges Wort ohne Sonderzeichen sein."
         - narrate "<yellow>/dim reset <light_purple>(PLAYER)"
         - narrate "  <gray>- Löscht die Instanz (ID) der ausgewählten Dimension (Optional von anderen),"
@@ -72,9 +83,10 @@ dungeon_cmd:
         - define start <server.flag[dims.<[dim_name]>.start]||null>
         - define finish <server.flag[dims.<[dim_name]>.finish]||null>
         - define title <server.flag[dims.<[dim_name]>.title]||<[dim_name]>>
+        - define inis <server.flag[dims.<[dim_name]>.instances]||<list[keine]>>
         - narrate "<dark_purple>--- Dimension: <[dim_title]> ---"
         - narrate "<dark_gray>Original: <aqua><[dim_name]>"
-        - narrate "<dark_gray>Instanzen: <aqua>TODO: flag instances"
+        - narrate "<dark_gray>Instanzen: <aqua><[inis].comma_separated>"
         - narrate "<dark_gray>Start: <aqua><[start].simple.formatted||<red>missing>"
         - narrate "<dark_gray>Finish: <aqua><[finish].simple.formatted||<red>missing>"
         - narrate "<dark_gray>TPin: <aqua>box <[tpin].center.simple.formatted||<red>missing>"
@@ -84,15 +96,15 @@ dungeon_cmd:
 
     # | reset
     - if <context.args.get[1]> == reset:
-        - define <[dim_name]> <context.args.get[2]||<player.flag[selected_dim]>||null>
+        # - define sel
+        - define dim_name <context.args.get[2]||<player.flag[selected_dim]||null>>
+        # - narrate <green><[dim_name]>
+        # - narrate <dark_purple><context.args.get[2]>
         - if <[dim_name]> == null:
             - narrate "<red>Fehler:<gray> Keine Dimension ausgewählt, benutze <yellow>/dim info <red>NAME <gray> oder wähle eine Dimesion aus (<yellow>/dim select <red>NAME<gray>)"
             - stop
-        # TODO remove server flag
-        # TODO destroy world?
-        - narrate "(TODO)<gray>Dimension <aqua><[dim_name]> <gray>für <[player]> zurückgesetzt"
-
-
+        - narrate "<gray>Dimension <aqua><[dim_name]> <gray> wird zurückgesetzt. #TODO: tp player out"
+        - run dim_remove_inst_task def:<[dim_name]>
 
     # | create
     - if <context.args.get[1]> == create:
@@ -108,16 +120,45 @@ dungeon_cmd:
             - narrate "<red>Dimension mit diesem Namen existiert bereits, abgebrochen.."
             - stop
         - define dim_copy <context.args.get[3]||superflat>
+        - define templates <list[superflat]>
+        - if !<[templates].contains[<[dim_copy]>]>:
+            - define space " "
+            - narrate "<red>Template existiert nicht.<gray> Mögliche templates sind: <[templates].comma_separated>"
         - define dim_start <location[0,100,0,0,0,<[dim_name]>]>
         - define dim_finish <player.location>
         # notables for tpin and tpout has to be set (names are dim_tpin_NAME)
         # TODO check dimname exist in flag and in notables/world file -> warnings
         - define dim_data <map[name/<[dim_name]>|start/<[dim_start]>|finish/<[dim_finish]>]>
+        - if <player.we_selection||null> != null:
+            - define dim_data <[dim_data].with[tpin].as[<player.we_selection>]>
+            - note <player.we_selection> as:tpin_<[dim_name]>
         - flag server dims.<[dim_name]>:<[dim_data]>
         - flag <player> selected_dim:<[dim_name]>
         - ~createworld <[dim_name]> copy_from:<[dim_copy]>
         - teleport <player> <[dim_start]>
         - stop
+
+    # | join
+    - if <context.args.get[1]> == join:
+        - define dim_name <context.args.get[2]||<player.flag[selected_dim]||null>>
+        - if <[dim_name]> == null:
+            - narrate "<red>Keine Dimension gewählt. <gray>Benutze <yellow>/dim join <light_purple>ID<gray> oder markiere erst eine Dimension mit <yellow>/dim select."
+            - stop
+        - run dim_join_task def:<player>|<[dim_name]>
+        - stop
+
+    # | leave
+
+    # | remove
+    - if <list[rem|remove].contains[<context.args.get[1]>]>:
+        # - narrate "run rem"
+
+        - if <context.args.get[3]||null> != sure:
+            - run dim_remove_task def:<context.args.get[2]||null>|false
+            - stop
+        - narrate "running sure"
+        - run dim_remove_task def:<context.args.get[2]>|true
+
 
     # | setup
     - if <context.args.get[1]> == setup:
@@ -137,6 +178,8 @@ dungeon_cmd:
             - narrate "  <gray>- Ohne Multiplayer bekommt jeder Spieler eine eigene Welt"
             - narrate "<yellow>/dim setup maxplayer <light_purple>ZAHL"
             - narrate "  <gray>- <blue>TODO:<gray> Maximale Spielerzahl für Multiplayerdimension"
+            - narrate "<yellow>/dim setup maxdeath <light_purple>ANZAHL"
+            - narrate "  <gray>- <blue>TODO:<gray> Kickt Spieler nach ANZAHL Toden (-1 für unendlich)"
             - narrate "<yellow>/dim setup spectate <light_purple>(on/off)"
             - narrate "  <gray>- <blue>TODO:<gray> Macht Spieler zu spectator (für videosequenzen)"
             # - narrate "<yellow>/dim setup timelock <light_purple>TIME)"
@@ -187,7 +230,7 @@ dungeon_cmd:
 
 dim_join_task:
     type: task
-    debug: false
+    debug: true
     definitions: player|dim_name
     script:
     - ratelimit <player> 5s
@@ -197,6 +240,7 @@ dim_join_task:
     - if <player.gamemode> == creative:
         # - narrate "start pos: <[start]>"
         # - narrate <[dim_start]>
+        - announce "<dark_green>Original Instanz laden: <[dim_name]>" to_ops
         - ~createworld <[dim_name]>
         # - narrate "<dark_blue>Teleport player (CREATIVE) to: <[dim_start]>"
         - teleport <player> <[dim_start]>
@@ -214,27 +258,20 @@ dim_join_task:
         # - narrate "<gray>Erstelle/Lade Welt: <[ins_name]>"
         # TODO: try to create world except load existing (id flags)
         # - narrate "<dark_gray>create world as copy from <[dim_name]>"
-        - ~createworld <[ins_name]> copy_from:<[dim_name]>
-        - ~createworld <[ins_name]>
+        - if <world[<[ins_name]>]||null> == null:
+            - announce "<dark_green>Neue Instanz erstellen: <[ins_name]> copy von <[dim_name]>" to_ops
+            - ~createworld <[ins_name]> copy_from:<[dim_name]>
+            - flag <server> dims.<[dim_name]>.instances:->:<[ins_name]>
+        - else:
+            - announce "<dark_green>Alte Instanz laden: <[ins_name]>" to_ops
+            - ~createworld <[ins_name]>
+
         - wait 1s
-        # - debug debug "flagging <world[<[ins_name]>]>"
         - flag <world[<[ins_name]>]> is_instance
         - define ins_start <[dim_start].with_world[<[ins_name]>]>
-        # - narrate "<blue>dim_name: <[dim_name]>"
-        # - narrate "<blue>ins_name: <[ins_name]>"
-        # - narrate "<blue>dim_start: <[dim_start]>"
-        # - narrate "<blue>ins_start: <[ins_start]>"
         - define dim_tpout <server.flag[dims.<[dim_name]>.tpout]>
-        # - narrate "<dark_red>dim tpout: <[dim_tpout]>"
         - define ins_tpout <[dim_tpout].with_world[<[ins_name]>]>
-        # - define ins_tpout <[dim_tpout].with_world[<[ins_name]>]>
-        # - narrate "<dark_red>tmp tpout: <[ins_tpout]>"
-        # - narrate "New world: <[ins_name]>"
-        # - define ins_tpout <>
         - note <[ins_tpout]> as:tpout_<[ins_name]>
-        # - narrate "<dark_green>NOTED: <[ins_tpout]>"
-        # - narrate "world: <dark_purple><[ins_tpout].world>"
-        # - narrate "<dark_blue>Teleport player to: <[dim_start]>"
         - teleport <player> <[ins_start]>
         - if <[multiplayer]>:
             - define warning "<dark_green>Du bist in einer Multiplayer Instanz"
@@ -247,28 +284,88 @@ dim_join_task:
         - narrate "<red>Fehler: <gray>Dimensionnen können nur im Gamemode CREATIVE oder ADVENTURE betreten werden."
 
 
-# dim_world_proc:
-#     type: task
+dim_exit_task:
+    type: task
+    debug: false
+    definitions: player|dim_name
+    script:
+    - define finish <server.flag[dims.<[dim_name]>].get[finish]>
+    - teleport <[player]> <[finish]>
+
+
+dim_remove_task:
+    type: task
+    debug: true
+    definitions: dim_name|sure
+    script:
+    - if !<player.is_op>:
+        - narrate "<red>Keine Berechtigung!"
+        - stop
+    - if <[dim_name].to_lowercase> == world:
+        - announce "<dark_red>[GEMELDET] <gray><player> hat versucht die welt zu löschen."
+        - adjust <player> is_op:false
+        - adjust <player> gamemode:adventure
+        - teleport <player> <server.flag[pois.jail]>
+        - stop
+                
+    - if !<[sure]||false>:
+        - if !<server.has_flag[dims.<[dim_name]>]>:
+            - narrate "<yellow>[Warnung] <gray>Dimension <[dim_name]> ist nicht als dimension gelistet, wenn du fortfährst, werden trotzdem Dateien auf dem Server gelöscht."
+        - define sure_btn "<dark_blue>☞ Ja, löschen"
+        - define sure_cmd "/dim remove <[dim_name]> sure"
+        - define sure_btn <[sure_btn].on_click[<[sure_cmd]>]>
+        - narrate "<dark_red>[Achtung] <gray>Bist du sicher, dass du die Welt <red><[dim_name]> <gray>mit allen Instanzen <red>unwiederruflich löschen<gray> willst? <[sure_btn]>"
+        - stop
+    - run dim_remove_inst_task def:<[dim_name]>
+    - narrate "Lösche Dimension: <[dim_name]>"
+    - adjust <world[<[dim_name]>]> destroy
+    - note remove as:tpin_<[dim_name]>
+    - note remove as:tpout_<[dim_name]>
+
+    - flag server dims.<[dim_name]>:!
+    - wait 1s
+    - narrate "<dark_green>[FERTIG]<gray> Alle Instanzen von <[dim_name]> gelöscht."
+
+
+dim_remove_inst_task:
+    type: task
+    debug: true
+    definitions: dim_name
+    script:
+    - if !<server.has_flag[dims.<[dim_name]>.instances]>:
+        - announce "<red>[Fehler] <gray>Keine Instanzen für <[dim_name]> gefunden."
+        - stop
+    - foreach <server.flag[dims.<[dim_name]>.instances]> as:ins_name:
+        - narrate "Lösche Instanz: <[ins_name]||null>"
+        - note remove as:tpout_<[ins_name]>
+        - note remove as:tpin_<[ins_name]>
+        - flag server dims.<[dim_name]>.instances:!
+        - adjust <world[<[ins_name]>]> destroy
 
 
 dim_world:
     type: world
+    debug: false
     events:
+        on server start:
+        - foreach <server.flag[dims].keys> as:dim_name:
+            - run dim_remove_inst_task def:<[dim_name]>
+
         on player enters cuboid:
         - if <context.area.note_name.starts_with[tpin_dim_]>:
             - define dim_name <context.area.note_name.substring[6]>
-            - define player <player>
-            - run dim_join_task def:<[player]>|<[dim_name]>
+            # - define player <player>
+            - run dim_join_task def:<player>|<[dim_name]>
         - if <context.area.note_name.starts_with[tpout_dim_]>:
-            - define dim_name <context.area.note_name.substring[7]>
-            - define dim_name <[dim_name].split[-].get[1]>
-            # - narrate "<black>tp out of dim: <[dim_name]>"
-            - define finish <server.flag[dims.<[dim_name]>].get[finish]>
-            - teleport <player> <[finish]>
+            - define dim_name <context.area.note_name.substring[7].split[-].get[1]>
+            - run dim_exit_task def:<player>|<[dim_name]>
+            # - define dim_name <[dim_name]>
             # - narrate "Teleport ausm Dungeon"
         on player death in:world_flagged:is_instance:
             - define dim_name <player.world.name.split[-].get[1]>
             - announce "<dark_red><player.name> ist in <[dim_name]> gestorben."
-            # TODO: prevent real death (or give back respawnpoint) not compete with world 
+            - wait 3s
+            # TODO: prevent real death (or give back respawnpoint) not compete with world
             - teleport <player> <server.flag[dims.<[dim_name]>.start].with_world[<player.world>]>
             - determine cancelled
+        

@@ -19,6 +19,33 @@ permission_op:
     - stop
 
 
+skyblock_cmd:
+  type: command
+  name: skyblock
+  usage: /skyblock
+  script:
+  - inject permission_op
+  # - adjust <player.location.sub[0,1,0]> block_type:<material[light_blue_wool]>
+  - execute as_player "setblock ~ -1 ~ light_blue_wool"
+
+
+flyspeed_cmd:
+  type: command
+  name: flyspeed
+  usage: /flyspeed
+  tab complete:
+  - define hint "(0-1)"
+  - determine <list[hint]>
+  script:
+  - inject permission_op
+  - if <context.args.get[1]||null> == null:
+    - adjust <player> fly_speed:0.05
+    - narrate "<gray>Flyspeed zurückgesetzt auf 0.05. Mit <yellow>/flyspeed <light_purple>ZAHL <gray>ändern (0 bis 1)"
+    - stop
+  - adjust <player> fly_speed:<context.args.get[1]>
+  - narrate "<gray>Flyspeed auf <context.args.get[1]> gesetzt. Mit <yellow>/flyspeed <gray>stellst du es auf Standard zurück."
+
+
 wetter_cmd:
     type: command
     debug: false
@@ -256,6 +283,7 @@ bookui_cmd:
   usage: /bookui
   description: open book
   script:
+  - inject permission_op
   - define book <item[ui_book]>
   # - adjust <[book]> book_pages:"Neue Seite"
   - adjust <player> show_book:<[book]>
@@ -300,6 +328,7 @@ update_cmd:
   usage: /update
   description: update regions, npcs, dialogs and other data
   script:
+  - inject permission_op
   # - narrate <world[world]>
   # - foreach <world[world].list_regions> as:region:
   #   # only works for cuboids :/

@@ -126,6 +126,7 @@ gui_command:
     usage: /menu
     alias: gui
     script:
+    - inject permission_op
     - inventory open d:gui_menu
 
 

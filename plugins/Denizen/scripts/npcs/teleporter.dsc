@@ -39,6 +39,7 @@ teleporterport:
     description: Ausgef. von NPC buch klick
     debug: false
     script:
+    - inject permission_op
     - define npc <player.flag[teleporter.npc]||null>
     - define ziel <player.flag[teleporter.ziel]||null>
     - if <[ziel]> == null:
@@ -85,6 +86,7 @@ teleporter_cmd:
         - determine <list[<[ant].unescaped>]>
 
     script:
+    - inject permission_op
     # check commands
     - if !<list[neu|info|ruf|preis|text|antwort|link].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------

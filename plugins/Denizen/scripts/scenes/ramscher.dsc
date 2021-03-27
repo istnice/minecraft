@@ -40,6 +40,7 @@ ramscher_assi:
 
 ramscher_world:
     type: world
+    debug: false
     events:
         on time 0 in world:
         - define ramscher <npc[274]>
@@ -207,7 +208,7 @@ ramscher_da_task:
             - spawn <[ramscher].flag[schwein2]>
         # Spawn packed
         - define filepath ramscher/aufgebaut
-        - ~worldedit paste file:<[filepath]> position:<[loc]>
+        - worldedit paste file:<[filepath]> position:<[loc]>
         # TP NPCs
         - teleport <[ramscher].flag[schwein1]> <[ramscher].anchor[gatter1]>
         - teleport <[ramscher].flag[schwein2]> <[ramscher].anchor[gatter2]>
@@ -237,8 +238,8 @@ ramscher_weg_task:
         #     - despawn <[ramscher]>
         # - announce "verschwinde ramscher"
         # - wait 1s
-        - ~teleport <[ramscher]> <[ramscher].anchor[weg]>
-        - wait 0.4s
+        - teleport <[ramscher]> <[ramscher].anchor[weg]>
+        - wait 0.5s
         - if <[ramscher].flag[schwein1].is_spawned>:
             - despawn <[ramscher].flag[schwein1]>
         - if <[ramscher].flag[schwein2].is_spawned>:
@@ -252,10 +253,12 @@ ramscher_weg_task:
 
 ramscher_cmd:
     type: command
+    debug: false
     description: asdf asdf
     usage: /ramscher
     name: ramscher
     script:
+    - inject permission_op
     - if <context.args.get[1]> == packt:
         - flag <npc[274]> state:packtaus
     - inject ramscher_<context.args.get[1]>_task

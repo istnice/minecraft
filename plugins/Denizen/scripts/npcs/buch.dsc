@@ -48,6 +48,7 @@ buch_cmd:
     description: assigns trader and sets items
     debug: false
     script:
+    - inject permission_op
     # check commands
     - if !<list[neu|info|ruf|seite|editor|speichern].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------

@@ -51,14 +51,15 @@ fake_arrow:
 
 check_target:
     type: procedure
-    definitions: target|
+    # definitions: target
     debug: false
     script:
         # - debug LOG "checking target"
         # - narrate "checking target"
-        # - narrate "ziel: <[target]> flag: <[target].has_flag[zielvon.bruecke]>" targets:<server.match_player[sarb0t]>
-        - if <[target].has_flag[zielvon.bruecke]>:
-            # - narrate "ziel gefunden" targets:<server.match_player[sarb0t]>
+        # - narrate cont:<context>
+        # - narrate "ziel: <[entity]> flag: <[entity].has_flag[zielvon.bruecke]>" targets:<server.match_player[MC_Sarbot]>
+        - if <[entity].has_flag[zielvon.bruecke]>:
+            - narrate "ziel gefunden" targets:<server.match_player[MC_Sarbot]>
             - determine true
         - determine false
 

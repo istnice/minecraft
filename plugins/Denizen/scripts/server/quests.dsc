@@ -65,6 +65,7 @@ npcquest_cmd:
     - else if <context.args.get[1]> == link:
         - determine <server.flag[quests].keys>
     script:
+    - inject permission_op
     # check commands
     - if !<list[neu|ruf|text|antwort|link].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------

@@ -1,5 +1,6 @@
 monster:
   wolf:
+    name: Wolf
     vanilla: 
       type: wolf
     sentinel:
@@ -26,6 +27,7 @@ monster:
 
 
   spinne:
+    name: Spinne
     vanilla:
       type: spider
     wander:
@@ -33,6 +35,7 @@ monster:
 
 
   ertrunkener:
+    name: Wasserleiche
     vanilla:
       type: drowned
     wander:
@@ -43,6 +46,7 @@ monster:
 
 
   skelett:
+    name: <dark_red>Skelett
     vanilla:
       type: skeleton
     wander:
@@ -53,6 +57,7 @@ monster:
           chance: 20
 
   skelett_schwarz:
+    name: Skelett
     vanilla:
       type: wither_skeleton
     wander:

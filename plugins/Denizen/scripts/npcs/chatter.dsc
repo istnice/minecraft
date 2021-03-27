@@ -37,6 +37,7 @@ chatter_cmd:
     description: Makes an NPC be chatty!
     permission: script.npcchatter
     script:
+    - inject permission_op
     - if !<list[create|set|add|off].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------
         - narrate "<yellow>/npcchatter off"

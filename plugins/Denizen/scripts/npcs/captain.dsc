@@ -62,6 +62,7 @@ captain_cmd:
     description: Mache einen NPC zum Captain. Erfordert constanten pid (partner id) und ziel (name wo es hingeht).
     permission: script.npccaptain
     script:
+    - inject permission_op
     - if !<list[pid|ziel|off].contains[<context.args.get[1]||null>]>:
         - narrate "<&c>/npccaptain off - Kein Captain mehr."
         - narrate "<&c>/npccaptain ziel [NAME] - Reiseziel für Dialog"

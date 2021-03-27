@@ -11,9 +11,7 @@ rezepte_cmd:
     usage: /rezepte
     description: rezepte von spielern verwalten
     script:
-    - if !<player.is_op||context.server>:
-        - narrate "<red> Keine Berechtigung."
-        - stop
+    - inject permission_op
     - if !<list[neu|info|loot].contains[<context.args.get[1]||null>]>:
         - narrate <yellow>-----------------------------
         - narrate "<yellow>/rezepte info"

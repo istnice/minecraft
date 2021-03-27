@@ -139,6 +139,7 @@ dogfight_cmd:
     usage: /dogfight
     dscription: "moderiert den dogfight"
     script:
+    - inject permission_op
     - if !<list[create|info|hund|anmelden|abmelden|reset].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------
         - narrate "<yellow>/dogfight info <white>[NAME]"

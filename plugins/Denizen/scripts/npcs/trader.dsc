@@ -65,6 +65,7 @@ trader_cmd:
     description: assigns trader and sets items
     debug: false
     script:
+    - inject permission_op
     # check commands
     - if !<list[create|add|clear|set|buy|rem|info|restock|ruf].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------

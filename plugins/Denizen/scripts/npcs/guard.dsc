@@ -38,6 +38,7 @@ npc_guard_command:
     description: Makes an NPC a Guard!
     permission: script.npcguard
     script:
+    - inject permission_op
     - if !<list[set|off].contains[<context.args.get[1]||null>]>:
         - narrate "<&c>/npcguard off - Disable Guard"
         - narrate "<&c>/npcguard set [type] - Set the type of guard"

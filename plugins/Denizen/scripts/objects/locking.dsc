@@ -46,6 +46,7 @@ lock_door_cmd:
     - else if <context.args.get[1]> == flag:
         - determine <list[FLAG]>
     script:
+    - inject permission_op
     - if !<list[auf|zu|ruf|flag|item|info].contains[<context.args.get[1]||null>]>:
         - narrate <gray>-----------------------------
         - narrate "<yellow>/schloss zu"

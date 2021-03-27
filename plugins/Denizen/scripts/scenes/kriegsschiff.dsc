@@ -27,6 +27,7 @@ kanonen_feuer_command:
   description: Feuert alle kanonen vom Kriegsschiff
   permission: denizen.kriegsschiff
   script:
+  - inject permission_op
   - define kanone n@23
   - define ziel n@25
   - playsound <[kanone].location> sound:ENTITY_DRAGON_FIREBALL_EXPLODE pitch:1

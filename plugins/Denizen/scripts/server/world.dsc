@@ -31,9 +31,10 @@ general_events:
         on player right clicks trapped_chest:
             - narrate "<dark_gray>Verschlossen"
             - determine cancelled
-        
+
         on structure grows naturally:
-        - announce "<gray>Pflanze wächst: <context.structure>"
+        # - announce "<gray>Pflanze wächst: <context.structure>"
+        - determine cancelled
 
 
 
@@ -41,7 +42,8 @@ neustart_cmd:
     type: command
     name: neustart
     script:
-        - run auto_restarter_task
+    - inject permission_op
+    - run auto_restarter_task
 
 
 auto_restarter_world:

@@ -84,6 +84,7 @@ lauf_cmd:
     usage: /blauf
     description: renn
     script:
+    - inject permission_op
     - define bandit <npc[119]>
     - ~walk <[bandit]> <[bandit].anchor[step1]>
     - narrate <[bandit].anchor[step1]>

@@ -70,6 +70,7 @@ stuhl_cmd:
     usage: /stuhl
     description: erstellt stuhl aus treppe
     script:
+    - inject permission_op
     - define target <player.cursor_on>
     - if !<[target].material.name.ends_with[stairs]>:
         - narrate "<red>Funktioniert nur mit Treppen"

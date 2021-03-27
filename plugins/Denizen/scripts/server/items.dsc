@@ -177,3 +177,13 @@ i_totenkopf:
   display name: Schwarzer Totenschädel
   flags:
     preis: 50
+
+
+i_roterkackstock:
+  type: item
+  material: wooden_sword
+  display name: Dummer roter Stock
+  mechanisms:
+    custom_model_data: 1
+  flags:
+    preis: 99

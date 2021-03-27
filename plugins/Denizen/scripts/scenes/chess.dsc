@@ -38,6 +38,7 @@ chess_command:
     usage: /schach [action]
     description: Definiert Ankerpunkt des Schachbretts (ecke neben dem feld "0,0")
     script:
+    - inject permission_op
 
     # ANKER
     - if <context.args.get[1]> == anker:

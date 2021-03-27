@@ -54,6 +54,7 @@ tier_cmd:
     usage: /npctier
     dscription: "Spawnt und managed Tiere. Tiere haben Minecraft AI und sind passiv. Loot und Respawnzeit können konfiguriert werden."
     tab complete:
+    - inject permission_op
     - define args1 <list[neu|info|loot|hilfe]>
     - if !<[args1].contains[<context.args.get[1]||null>]>:
         - determine <[args1]>

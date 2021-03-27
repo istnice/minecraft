@@ -9,6 +9,12 @@ open_book_event:
         on player joins:
         - if !<player.inventory.contains.scriptname[logbuch_item]>:
             - give <item[logbuch_item].with[display=Logbuch]> slot:9
+        on player clicks item in inventory:
+        - if <context.item.display> == Logbuch:
+            - determine cancelled
+        on player drops item:
+        - if <context.item.display> == Logbuch:
+            - determine cancelled
 
 logbuch_cmd:
     type: command
